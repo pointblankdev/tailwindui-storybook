@@ -41,7 +41,7 @@ The two steps process makes it easy to adjust for future needs.
 
    ```sh
    # Replace `react.json` suffix with `vue.json` as you fit
-   node tailwindui-storybook output/tailwindui.react.json
+   node tailwindui-storybook.js ./output/tailwindui.react.json
    ```
 
 At this point, you will have new folder called `output/tailwindui-react` where it contains the stories and components. You can copy this folder to your repo and connect it to its storybook.
