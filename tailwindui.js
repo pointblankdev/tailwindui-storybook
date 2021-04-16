@@ -91,13 +91,19 @@ async function run() {
     process.exit(0);
   }
 
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir);
+    console.log("[INFO] output directory created");
+  }
+
   const browser = await playwright["chromium"].launch({
     headless: false,
-    // slowMo: 150,
+    // slowMo: 200, // Uncomment to activate slow mo
   });
   const ctx = await browser.newContext();
   const page = await ctx.newPage();
 
+  // Login to tailwindui.com
   await login(page, email, pass);
 
   await page.goto(baseUrl);
@@ -115,29 +121,38 @@ async function run() {
     `[INFO] ${sections.length} sections found (${sumComponents} components)`
   );
 
+  let hasError = false;
+
   for (const i in sections) {
     const { title, componentsCount, url } = sections[i];
     console.log(
-      `[INFO] fetching ${componentType} components: ${title} (${componentsCount} components)`
+      `[INFO][${i + 1}/${
+        sections.length
+      }] fetching ${componentType} components: ${title} (${componentsCount} components)`
     );
 
-    const components = await getComponents(page, url, componentType).catch(
-      (e) => {
-        console.log("[ERROR] getComponent failed:", title, e.message);
-      }
-    );
+    let components = [];
+    try {
+      components = await getComponents(page, url, componentType);
+    } catch (e) {
+      console.log("[ERROR] getComponent failed:", title, e.message);
+      hasError = true;
+      break;
+    }
 
     sections[i].components = components;
   }
 
   await browser.close();
 
-  console.log("[INFO] writing json file..");
+  if (hasError) {
+    process.exit(1);
+  }
 
-  fs.writeFileSync(
-    `${outputDir}/tailwindui.${componentType}.json`,
-    JSON.stringify(sections)
-  );
+  const jsonFile = `${outputDir}/tailwindui.${componentType}.json`;
+  console.log("[INFO] writing json file:", jsonFile);
+
+  fs.writeFileSync(jsonFile, JSON.stringify(sections));
 
   console.log("[INFO] done!");
 }
