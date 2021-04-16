@@ -126,7 +126,7 @@ async function run() {
   for (const i in sections) {
     const { title, componentsCount, url } = sections[i];
     console.log(
-      `[INFO][${i + 1}/${
+      `[${parseInt(i) + 1}/${
         sections.length
       }] fetching ${componentType} components: ${title} (${componentsCount} components)`
     );
