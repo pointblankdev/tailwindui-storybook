@@ -52,4 +52,12 @@ Here's how the structure looks like once connected to Storybook:
 
 ![tailwindui-storybook](docs/tailwindui-storybook-final.jpg)
 
-_That's it!_
+## Disclaimer
+
+This tool does not contain any Tailwind UI codes. It only helps you get the codes from tailwindui.com and generate the corresponding story files for your storybook. This means that to use this tool, you need to have a Tailwind UI license and a correct login credentials for tailwindui.com.
+
+No credentials are stored or sent to any third-party endpoints.
+
+**
+
+_That's it. Thanks!_
