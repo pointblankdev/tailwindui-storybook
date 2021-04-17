@@ -34,7 +34,7 @@ The two steps process makes it easy to adjust for future needs.
 
    The command will start chromium and navigate thru tailwindui.com website to copy the components codes. Here's how it looks like:
 
-   ![tailwindui-storybook](tailwindui-storybook-process.gif)
+   ![tailwindui-storybook](docs/tailwindui-storybook-process.gif)
 
 4. Once done, you'll have new file at `output/tailwindui-<react|vue|html>.json`.
 5. Now we can create the mdx files based on above json. To do so, run:
@@ -44,10 +44,12 @@ The two steps process makes it easy to adjust for future needs.
    node tailwindui-storybook.js ./output/tailwindui.react.json react
    ```
 
-At this point, you will have new folder called `output/tailwindui-react` where it contains the stories and components. You can copy this folder to your repo and connect it to its storybook.
+   ![tailwindui-storybook](docs/tailwindui-storybook-mdx.gif)
+
+At this point, you will have new folder called `output/tailwindui-react` where it contains the stories and components. You can copy this folder to your repo and connect it to storybook.
 
 Here's how the structure looks like once connected to Storybook:
 
-![tailwindui-storybook](tailwindui-storybook-final.jpg)
+![tailwindui-storybook](docs/tailwindui-storybook-final.jpg)
 
 _That's it!_
