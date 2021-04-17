@@ -3,16 +3,34 @@ const playwright = require("playwright");
 
 const baseUrl = "https://tailwindui.com";
 
-const email = process.env.email;
-const pass = process.env.password;
+const email = (process.env.email || "").trim();
+const password = (process.env.password || "").trim();
+
+// Make sure email and password are provided
+if (!email || !password) {
+  console.log(
+    "[ERROR] please provide email and password of your tailwind ui account as environment variable."
+  );
+  console.log(
+    "example: email=myemail@example.com password=mypassword node tailwindui.js react"
+  );
+  process.exit(1);
+}
 
 const outputDir = "output";
 
-async function login(page, email, pass) {
+async function login(page, email, password) {
   await page.goto(baseUrl + "/login");
   await page.fill('[name="email"]', email);
-  await page.fill('[name="password"]', pass);
+  await page.fill('[name="password"]', password);
   await page.click('[type="submit"]');
+
+  // Assert login succeeded
+  const loginFailedToken = "These credentials do not match our records";
+  const el = await page.$$(`:text("${loginFailedToken}")`);
+  if (el.length) {
+    throw new Error("invalid credentials");
+  }
 }
 
 async function getSections(page) {
@@ -103,10 +121,18 @@ async function run() {
   const ctx = await browser.newContext();
   const page = await ctx.newPage();
 
-  // Login to tailwindui.com
-  await login(page, email, pass);
+  console.log("[INFO] logging in to tailwindui.com..");
 
-  await page.goto(baseUrl);
+  try {
+    // Login to tailwindui.com. Throws error if failed.
+    await login(page, email, password);
+  } catch (e) {
+    const maskPassword = password.replace(/.{4}$/g, "*".repeat(4));
+    console.log(
+      `[ERROR] login failed: ${e.message} (email: ${email}, pasword: ${maskPassword})`
+    );
+    process.exit(1);
+  }
 
   console.log(`[INFO] fetching sections..`);
   let sections = await getSections(page).catch((e) => {
@@ -121,8 +147,6 @@ async function run() {
     `[INFO] ${sections.length} sections found (${sumComponents} components)`
   );
 
-  let hasError = false;
-
   for (const i in sections) {
     const { title, componentsCount, url } = sections[i];
     console.log(
@@ -136,18 +160,13 @@ async function run() {
       components = await getComponents(page, url, componentType);
     } catch (e) {
       console.log("[ERROR] getComponent failed:", title, e.message);
-      hasError = true;
-      break;
+      process.exit(1);
     }
 
     sections[i].components = components;
   }
 
   await browser.close();
-
-  if (hasError) {
-    process.exit(1);
-  }
 
   const jsonFile = `${outputDir}/tailwindui.${componentType}.json`;
   console.log("[INFO] writing json file:", jsonFile);
