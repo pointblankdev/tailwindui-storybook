@@ -29,7 +29,7 @@ The two steps process makes it easy to adjust for future needs.
    email=<youremail@mail.com> password=<yourpassword> node tailwindui.js <react|vue|html>
 
    # Example:
-   email=hey@example.com password=pass123 node tailwindui.js react
+   email='hey@example.com' password='pass123' node tailwindui.js react
    ```
 
    The command will start chromium and navigate thru tailwindui.com website to copy the components codes. Here's how it looks like:
