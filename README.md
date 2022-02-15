@@ -30,6 +30,9 @@ The two steps process makes it easy to adjust for future needs.
 
    # Example:
    email='hey@example.com' password='pass123' node tailwindui.js react
+
+   # To run automated browser in background set HEADLESS to true
+   headless=1 email=<youremail@mail.com> password=<yourpassword> node tailwindui.js <react|vue|html>
    ```
 
    The command will start chromium and navigate thru tailwindui.com website to copy the components codes. Here's how it looks like:

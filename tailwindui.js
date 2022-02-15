@@ -55,7 +55,16 @@ async function getComponents(page, sectionUrl, type = "html") {
   await page.goto(sectionUrl);
 
   // Select react code
-  await page.waitForSelector('[x-model="activeSnippet"]');
+  // Page does not have this element if account did not purchage this module
+  try {
+    await page.waitForSelector('[x-model="activeSnippet"]', {
+      timeout: 10 * 1000
+    });
+  } catch (error) {
+    console.warn(`You donot have access this section components: ${sectionUrl}`);
+    return [];
+  }
+
   await page.evaluate(
     ([type]) => {
       document.querySelectorAll('[x-model="activeSnippet"]').forEach((el) => {
@@ -72,7 +81,11 @@ async function getComponents(page, sectionUrl, type = "html") {
   await page.waitForSelector('[x-ref="code"]');
   await page.evaluate(([]) => {
     document.querySelectorAll('section[id^="component-"]').forEach((el) => {
-      el.querySelector('[x-ref="code"]').click();
+      const codeButton = el.querySelector('[x-ref="code"]')
+      if(codeButton == null) {
+        return;
+      }
+      codeButton.click();
     });
   }, []);
 
@@ -83,10 +96,14 @@ async function getComponents(page, sectionUrl, type = "html") {
     ([type]) => {
       let components = [];
       document.querySelectorAll('section[id^="component-"]').forEach((el) => {
-        const title = el.querySelector("header h2").innerText;
+        const title = el.querySelector("h2 a").innerText;
 
-        const component = el.querySelector(`[x-ref="codeBlock${type}"]`)
-          .innerText;
+        const componentEl = el.querySelector(`[x-ref="codeBlock${type}"]`);
+        if(componentEl == null) {
+          return;
+        }
+
+        const component = componentEl.innerText;
         components.push({ title, codeblocks: { [type]: component } });
       });
       return Promise.resolve(components);
@@ -98,6 +115,13 @@ async function getComponents(page, sectionUrl, type = "html") {
   await page.goto(baseUrl);
 
   return components;
+}
+
+function writeToFile(componentType, sections, error = false) {
+  const jsonFile = error ? `${outputDir}/incomplete-tailwindui.${componentType}.json` : `${outputDir}/tailwindui.${componentType}.json`;
+  console.log("[INFO] writing json file:", jsonFile);
+
+  fs.writeFileSync(jsonFile, JSON.stringify(sections));
 }
 
 async function run() {
@@ -115,7 +139,7 @@ async function run() {
   }
 
   const browser = await playwright["chromium"].launch({
-    headless: false,
+    headless: !!process.env.headless,
     // slowMo: 200, // Uncomment to activate slow mo
   });
   const ctx = await browser.newContext();
@@ -160,6 +184,7 @@ async function run() {
       components = await getComponents(page, url, componentType);
     } catch (e) {
       console.log("[ERROR] getComponent failed:", title, e.message);
+      writeToFile(componentType, sections, true);
       process.exit(1);
     }
 
@@ -168,10 +193,7 @@ async function run() {
 
   await browser.close();
 
-  const jsonFile = `${outputDir}/tailwindui.${componentType}.json`;
-  console.log("[INFO] writing json file:", jsonFile);
-
-  fs.writeFileSync(jsonFile, JSON.stringify(sections));
+  writeToFile(componentType, sections, false);
 
   console.log("[INFO] done!");
 }
