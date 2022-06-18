@@ -128,7 +128,7 @@ async function run() {
   } catch (e) {
     const maskPassword = password.replace(/.{4}$/g, "*".repeat(4));
     console.log(
-      `[ERROR] login failed: ${e.message} (email: ${email}, pasword: ${maskPassword})`
+      `[ERROR] login failed: ${e.message} (email: ${email}, password: ${maskPassword})`
     );
     process.exit(1);
   }
