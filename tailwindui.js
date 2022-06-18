@@ -84,10 +84,8 @@ async function getComponents(page, sectionUrl, type = "html") {
     ([type]) => {
       let components = [];
       document.querySelectorAll('section[id^="component-"]').forEach((el) => {
-        const title = el.querySelector("header h2").innerText;
-
-        const component = el.querySelector(`[x-ref="codeBlock${type}"]`)
-          .innerText;
+        const title = el.querySelector("a").innerText;
+        const component = el.querySelector(`[x-ref="codeBlock${type}"]`).innerText;
         components.push({ title, codeblocks: { [type]: component } });
       });
       return Promise.resolve(components);
