@@ -21,9 +21,10 @@ const outputDir = "output";
 
 async function login(page, email, password) {
   await page.goto(baseUrl + "/login");
-  await page.fill('[name="email"]', email);
-  await page.fill('[name="password"]', password);
+  await page.type('#email', email);
+  await page.type('#password', password);
   await page.click('[type="submit"]');
+  await page.waitForNavigation();
 
   // Assert login succeeded
   const loginFailedToken = "These credentials do not match our records";
@@ -83,10 +84,8 @@ async function getComponents(page, sectionUrl, type = "html") {
     ([type]) => {
       let components = [];
       document.querySelectorAll('section[id^="component-"]').forEach((el) => {
-        const title = el.querySelector("header h2").innerText;
-
-        const component = el.querySelector(`[x-ref="codeBlock${type}"]`)
-          .innerText;
+        const title = el.querySelector("a").innerText;
+        const component = el.querySelector(`[x-ref="codeBlock${type}"]`).innerText;
         components.push({ title, codeblocks: { [type]: component } });
       });
       return Promise.resolve(components);
@@ -129,7 +128,7 @@ async function run() {
   } catch (e) {
     const maskPassword = password.replace(/.{4}$/g, "*".repeat(4));
     console.log(
-      `[ERROR] login failed: ${e.message} (email: ${email}, pasword: ${maskPassword})`
+      `[ERROR] login failed: ${e.message} (email: ${email}, password: ${maskPassword})`
     );
     process.exit(1);
   }
