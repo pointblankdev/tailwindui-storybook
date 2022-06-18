@@ -21,9 +21,10 @@ const outputDir = "output";
 
 async function login(page, email, password) {
   await page.goto(baseUrl + "/login");
-  await page.fill('[name="email"]', email);
-  await page.fill('[name="password"]', password);
+  await page.type('#email', email);
+  await page.type('#password', password);
   await page.click('[type="submit"]');
+  await page.waitForNavigation();
 
   // Assert login succeeded
   const loginFailedToken = "These credentials do not match our records";
