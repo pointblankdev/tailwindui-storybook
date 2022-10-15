@@ -2,6 +2,8 @@ const fs = require("fs");
 const camelCase = require("lodash/camelCase");
 const startCase = require("lodash/startCase");
 
+const createDir = require("./util/createDir");
+
 const [, , jsonFile, componentType] = process.argv;
 
 if (!jsonFile || !componentType) {
@@ -11,21 +13,8 @@ if (!jsonFile || !componentType) {
 }
 
 const sections = require(jsonFile);
-
-const outputDir = `output/tailwindui-${componentType}`;
-
 const storyFolder = `Tailwind UI`;
-
-function createDir(dir) {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir);
-    console.log("[INFO] directory created:", dir);
-  }
-}
-
-function pascalCase(str) {
-  return startCase(camelCase(str)).replace(/ /g, "");
-}
+const outputDir = `output/tailwindui-${componentType}`;
 
 async function run() {
   createDir(outputDir);
@@ -82,6 +71,10 @@ ${componentStories.join("\n")}
 
     fs.writeFileSync(`${storyDir}/index.stories.mdx`, storyIndex);
   });
+}
+
+function pascalCase(str) {
+  return startCase(camelCase(str)).replace(/ /g, "");
 }
 
 run();
