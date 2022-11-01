@@ -58,6 +58,6 @@ This tool does not contain any Tailwind UI codes. It only helps you get the code
 
 No credentials are stored or sent to any third-party endpoints.
 
-\*\*
+**
 
 _That's it. Thanks!_
