@@ -10,7 +10,5 @@
     "lodash": "^4.17.21",
     "playwright": "^1.27.1"
   },
-  "devDependencies": {
-    "ava": "^4.3.3"
-  }
+  "devDependencies": {}
 }
