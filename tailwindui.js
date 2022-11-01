@@ -1,10 +1,10 @@
 const playwright = require("playwright");
 
+const login = require("./lib/login");
+const getSections = require("./lib/getSections");
+const getComponents = require("./lib/getComponents");
 const createDir = require("./util/createDir");
 const writeToFile = require("./util/writeToFile");
-const login = require("./util/login");
-const getSections = require("./util/getSections");
-const getComponents = require("./util/getComponents");
 
 const email = (process.env.email || "").trim();
 const password = (process.env.password || "").trim();
