@@ -9,6 +9,5 @@
     "dotenv": "^16.0.3",
     "lodash": "^4.17.21",
     "playwright": "^1.27.1"
-  },
-  "devDependencies": {}
+  }
 }
