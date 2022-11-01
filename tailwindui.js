@@ -86,7 +86,7 @@ async function run() {
     sections[i].components = components;
   }
 
-  // await browser.close();
+  await browser.close();
 
   writeToFile(outputDir, componentType, sections);
   console.log("[INFO] done!");

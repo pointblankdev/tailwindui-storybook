@@ -4,15 +4,21 @@ const startCase = require("lodash/startCase");
 
 const createDir = require("./util/createDir");
 
-const [, , jsonFile, componentType] = process.argv;
-
-if (!jsonFile || !componentType) {
-  console.log("usage: tailwind-storybook.js <jsonfile> <type>");
-  console.log("example: tailwind-storybook.js tailwindui.react.json react");
+const componentType = process.argv[process.argv.length - 1];
+if (!componentType.match(/react|html|vue/)) {
+  console.log("usage: tailwind-storybook.js <react|html|vue>");
+  console.log("example: tailwind-storybook.js react");
   process.exit(0);
 }
 
-const sections = require(jsonFile);
+const jsonFile = `./output/tailwindui.${componentType}.json`
+if (!fs.existsSync(jsonFile)) {
+  console.error("[ERROR] could not find json file at", jsonFile)
+  console.log(`→ Have you run 'yarn start ${componentType}'?`)
+  process.exit(1)
+}
+
+const sections = require(jsonFile)
 const storyFolder = `Tailwind UI`;
 const outputDir = `output/tailwindui-${componentType}`;
 

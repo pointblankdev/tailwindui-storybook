@@ -26,10 +26,10 @@ The two steps process makes it easy to adjust for future needs.
 
    ```sh
    # Format:
-   email=<youremail@mail.com> password=<yourpassword> node tailwindui.js <react|vue|html>
+   yarn start <react|vue|html>
 
    # Example:
-   email='hey@example.com' password='pass123' node tailwindui.js react
+   yarn start react
    ```
 
    The command will start chromium and navigate thru tailwindui.com website to copy the components codes. Here's how it looks like:
@@ -40,8 +40,8 @@ The two steps process makes it easy to adjust for future needs.
 5. Now we can create the mdx files based on above json. To do so, run:
 
    ```sh
-   # Replace `react.json` suffix with `vue.json` as you fit
-   node tailwindui-storybook.js ./output/tailwindui.react.json react
+    # Replace "react" with "html" or "vue" (based on step 3)
+   yarn create-mdx react
    ```
 
    ![tailwindui-storybook](docs/tailwindui-storybook-mdx.gif)
@@ -58,6 +58,6 @@ This tool does not contain any Tailwind UI codes. It only helps you get the code
 
 No credentials are stored or sent to any third-party endpoints.
 
-**
+\*\*
 
 _That's it. Thanks!_
