@@ -26,7 +26,7 @@ async function run() {
   createDir(outputDir);
 
   // Uncomment to see data structure
-  console.log("sections[0]:", sections[0]);
+  // console.log("sections[0]:", sections[0]);
 
   sections.forEach((section) => {
     const { title, components } = section;
