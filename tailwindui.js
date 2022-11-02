@@ -12,8 +12,12 @@ const password = (process.env.password || "").trim();
 const outputDir = "output";
 const componentsPage = `${process.env.BASE_URL}/components`;
 
+const guestMode = !email && !password;
+
 // Make sure email and password are provided
-if (!email || !password) {
+if (guestMode) {
+  console.log("[INFO] using guest mode because both email and password are not provided")
+} else if (!email || !password) {
   console.log(
     "[ERROR] please provide email and password of your tailwind ui account as environment variable."
   );
@@ -40,11 +44,13 @@ async function run() {
   const ctx = await browser.newContext();
   const page = await ctx.newPage();
 
-  console.log("[INFO] logging in to tailwindui.com..");
 
   try {
-    // Login to tailwindui.com. Throws error if failed.
-    await login(page, email, password);
+    // Login to tailwindui.com if not in guest mode. Throws error if failed.
+    if (!guestMode) {
+      console.log("[INFO] logging in to tailwindui.com..");
+      await login(page, email, password);
+    }
     await page.goto(componentsPage);
   } catch (e) {
     const maskPassword = password.replace(/.{4}$/g, "*".repeat(4));
