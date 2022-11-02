@@ -47,12 +47,15 @@ async function run() {
     components.forEach((component) => {
       const componentName = pascalCase(component.title);
 
+      // Add `Component_` prefix for import name if component name starts with number
+      const importName = componentName.match(/^\d/) ? `Component_${componentName}` : componentName;
+
       importComponents.push(
-        `import ${componentName} from "./${componentName}";`
+        `import ${importName} from "./${componentName}";`
       );
       componentStories.push(`
 <Story name="${componentName}">
-    <${componentName} />
+    <${importName} />
 </Story>`);
 
       fs.writeFileSync(
@@ -62,8 +65,7 @@ async function run() {
     });
 
     // Create story file
-    const storyIndex = `
-import {
+    const storyIndex = `import {
     Meta,
     Story,
 } from "@storybook/addon-docs/blocks";
