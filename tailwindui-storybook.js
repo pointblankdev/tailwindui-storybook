@@ -70,7 +70,6 @@ async function run() {
 ${importComponents.join("\n")}
 
 <Meta title="${storyFolder} / ${sectionName}" />
-
 ${componentStories.join("\n")}
 `;
 
