@@ -65,10 +65,7 @@ async function run() {
     });
 
     // Create story file
-    const storyIndex = `import {
-    Meta,
-    Story,
-} from "@storybook/addon-docs/blocks";
+    const storyIndex = `import { Meta, Story } from "@storybook/addon-docs";
 
 ${importComponents.join("\n")}
 
